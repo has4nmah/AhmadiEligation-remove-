@@ -122,6 +122,57 @@ export default function App() {
     return () => window.removeEventListener('hashchange', handleHash);
   }, []);
 
+  // Update dynamic document title and meta description for SEO
+  useEffect(() => {
+    if (activeItem) {
+      document.title = `${activeItem.title} | আহমদীয়া জামাত: আপত্তি ও সমাধান`;
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) {
+        metaDesc.setAttribute('content', activeItem.summary.slice(0, 160));
+      }
+    } else {
+      document.title = 'আহমদীয়া জামাত: আপত্তি ও সমাধান';
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) {
+        metaDesc.setAttribute(
+          'content',
+          'আহমদীয়া মুসলিম জামাতের বিরুদ্ধে উত্থাপিত সাধারণ অভিযোগ ও আপত্তির কুরআন, হাদিস ও রূহানী খাযায়েনভিত্তিক যুক্তিপূর্ণ নির্ভরযোগ্য জবাবের তথ্যভাণ্ডার।'
+        );
+      }
+    }
+  }, [activeItem]);
+
+  // Inject FAQPage Schema for Search Engines
+  useEffect(() => {
+    const existingScript = document.getElementById('faq-schema-jsonld');
+    if (existingScript) {
+      existingScript.remove();
+    }
+
+    const script = document.createElement('script');
+    script.id = 'faq-schema-jsonld';
+    script.type = 'application/ld+json';
+    const schemaData = {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: OBJECTIONS_DATA.map((item) => ({
+        '@type': 'Question',
+        name: item.title,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: item.summary
+        }
+      }))
+    };
+    script.text = JSON.stringify(schemaData);
+    document.head.appendChild(script);
+
+    return () => {
+      const s = document.getElementById('faq-schema-jsonld');
+      if (s) s.remove();
+    };
+  }, []);
+
   // Popular search tags derived from data
   const popularTags = useMemo(() => {
     return [
@@ -311,11 +362,12 @@ export default function App() {
 
         {/* Objections Grid or Empty State */}
         {filteredObjections.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
-            {filteredObjections.map((item) => (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5">
+            {filteredObjections.map((item, index) => (
               <ObjectionCard
                 key={item.id}
                 item={item}
+                index={index}
                 categoryName={categoryNameMap[item.category] || 'অন্যান্য'}
                 isBookmarked={bookmarks.includes(item.id)}
                 onToggleBookmark={toggleBookmark}

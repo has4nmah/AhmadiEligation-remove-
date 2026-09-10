@@ -239,18 +239,29 @@ export const ObjectionDetailModal: React.FC<ObjectionDetailModalProps> = ({
           <div className="pt-4 border-t border-slate-200">
             <h4 className="text-base font-bold text-slate-900 mb-3 flex items-center gap-2">
               <BookOpen className="w-5 h-5 text-emerald-700" />
-              প্রামাণ্য দলিল ও সূত্রসমূহ (কুরআন, হাদিস ও উদ্ধৃতি)
+              প্রামাণ্য দলিল ও সূত্রসমূহ (কুরআন, হাদিস ও রূহানী খাযায়েন উদ্ধৃতি)
             </h4>
 
             <div className="space-y-3.5">
               {item.references.map((ref, idx) => (
                 <div
                   key={idx}
-                  className="bg-slate-50 border border-slate-200 rounded-xl p-4 sm:p-5 relative"
+                  className={`border rounded-xl p-4 sm:p-5 relative ${
+                    ref.type === 'book'
+                      ? 'bg-amber-50/40 border-amber-200'
+                      : 'bg-slate-50 border-slate-200'
+                  }`}
                 >
                   <div className="flex items-center justify-between gap-2 mb-2">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold bg-white text-emerald-800 border border-emerald-200">
-                      দলিল {idx + 1}: {ref.source}
+                    <span
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold border ${
+                        ref.type === 'book'
+                          ? 'bg-amber-100 text-amber-950 border-amber-300'
+                          : 'bg-white text-emerald-800 border-emerald-200'
+                      }`}
+                    >
+                      {ref.type === 'book' ? '📖 মির্যা সাহেবের মূল গ্রন্থ: ' : `দলিল ${idx + 1}: `}
+                      {ref.source}
                     </span>
                     <button
                       onClick={() =>
@@ -272,7 +283,9 @@ export const ObjectionDetailModal: React.FC<ObjectionDetailModalProps> = ({
                   )}
 
                   <div className="text-slate-800 text-sm sm:text-base leading-relaxed">
-                    <strong className="text-slate-900 font-semibold">অনুবাদ: </strong>
+                    <strong className="text-slate-900 font-semibold">
+                      {ref.type === 'book' ? 'মূল বাণী / যুক্তি: ' : 'অনুবাদ: '}
+                    </strong>
                     {ref.translation}
                   </div>
 
