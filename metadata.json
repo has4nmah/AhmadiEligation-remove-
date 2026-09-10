@@ -1,0 +1,6 @@
+{
+  "name": "আহমদীয়া জামাত: আপত্তি ও সমাধান",
+  "description": "আহমদীয়া মুসলিম জামাতের বিরুদ্ধে উত্থাপিত সাধারণ অভিযোগ ও আপত্তির কুরআন, হাদিস ও যুক্তিভিত্তিক নির্ভরযোগ্য জবাবের তথ্যভাণ্ডার।",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
